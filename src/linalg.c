@@ -32,7 +32,7 @@ b32 mat_copy(mat *src, mat *dst) {
   return true;
 }
 
-void clear(mat *mat) {
+void mat_clear(mat *mat) {
   memset(mat->data, 0, sizeof(f32) * (u32)mat->rows * (u32)mat->cols);
 }
 
@@ -53,8 +53,8 @@ void mat_scale(mat *mat, f32 x) {
   }
 }
 
-u32 mat_sum(mat *mat) {
-  u32 sum = 0;
+f32 mat_sum(mat *mat) {
+  f32 sum = 0;
 
   u32 size = (u32)mat->cols * mat->rows;
   for (u32 i = 0; i < size; ++i) {
@@ -100,8 +100,8 @@ b32 mat_sub(mat *out, const mat *a, const mat *b) {
 
 b32 _mat_mult_nn(mat *out, const mat *a, const mat *b) {
   for (u32 i = 0; i < out->rows; ++i) {
-    for (u32 j = 0; j < out->cols; ++i) {
-      for (u32 k = 0; k < a->cols; ++i) {
+    for (u32 j = 0; j < out->cols; ++j) {
+      for (u32 k = 0; k < a->cols; ++k) {
         out->data[j + i * out->cols] +=
             a->data[k + i * a->cols] * b->data[j + k * b->cols];
       }
@@ -112,8 +112,8 @@ b32 _mat_mult_nn(mat *out, const mat *a, const mat *b) {
 }
 b32 _mat_mult_tn(mat *out, const mat *a, const mat *b) {
   for (u32 i = 0; i < out->rows; ++i) {
-    for (u32 j = 0; j < out->cols; ++i) {
-      for (u32 k = 0; k < a->cols; ++i) {
+    for (u32 j = 0; j < out->cols; ++j) {
+      for (u32 k = 0; k < a->cols; ++k) {
 
         out->data[j + i * out->cols] +=
             a->data[i + k * a->cols] * b->data[j + k * b->cols];
@@ -125,8 +125,8 @@ b32 _mat_mult_tn(mat *out, const mat *a, const mat *b) {
 }
 b32 _mat_mult_nt(mat *out, const mat *a, const mat *b) {
   for (u32 i = 0; i < out->rows; ++i) {
-    for (u32 j = 0; j < out->cols; ++i) {
-      for (u32 k = 0; k < a->cols; ++i) {
+    for (u32 j = 0; j < out->cols; ++j) {
+      for (u32 k = 0; k < a->cols; ++k) {
         out->data[j + i * out->cols] +=
             a->data[k + i * a->cols] * b->data[k + j * b->cols];
       }
@@ -138,8 +138,8 @@ b32 _mat_mult_nt(mat *out, const mat *a, const mat *b) {
 
 b32 _mat_mult_tt(mat *out, const mat *a, const mat *b) {
   for (u32 i = 0; i < out->rows; ++i) {
-    for (u32 j = 0; j < out->cols; ++i) {
-      for (u32 k = 0; k < a->cols; ++i) {
+    for (u32 j = 0; j < out->cols; ++j) {
+      for (u32 k = 0; k < a->cols; ++k) {
         out->data[j + i * out->cols] +=
             a->data[i + k * a->cols] * b->data[k + j * b->cols];
       }
@@ -187,6 +187,9 @@ b32 mat_mult(mat *out, const mat *a, const mat *b, b32 zero_out, b32 tranpose_a,
 b32 mat_transpose(mat *out, const mat *mat) {
   if (out->rows != mat->cols || out->cols != mat->rows) {
     return false;
+  }
+  if (out->data == mat->data){ 
+    return false;    
   }
   puts("debug transpose\n");
   for (u32 i = 0; i < mat->rows; ++i) {
