@@ -17,4 +17,4 @@ typedef float f32;
 typedef double f64; 
 
 #define false ((b32)0)
-#define true ((b32)0)
+#define true ((b32)1)
