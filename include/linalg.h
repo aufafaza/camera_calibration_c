@@ -17,7 +17,7 @@ b32 mat_copy(mat* src, mat* dst);
 void mat_clear(mat* mat); 
 void mat_fill(mat* mat, f32 x); 
 void mat_scale(mat* mat, f32 x); 
-u32 mat_sum(mat* mat); 
+f32 mat_sum(mat* mat); 
 
 b32 mat_add(mat* out, const mat* a, const mat* b); 
 b32 mat_sub(mat* out, const mat* a, const mat* b); 
